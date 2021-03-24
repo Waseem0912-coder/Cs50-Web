@@ -16,6 +16,7 @@ class Comments(models.Model):
 
 class Category(models.Model):
     category=models.CharField(max_length=20)
+    
 
 class Listing(models.Model):
     bid_owner= models.CharField(max_length=64)
@@ -28,6 +29,8 @@ class Listing(models.Model):
     bid_categories = models.ManyToManyField(Category)
     bid_comments = models.ManyToManyField(Comments)
     bid_status = False
+    def __str__(self):
+        return f"{self.id}: Owner: {self.bid_owner} Titlekj {self.current_bidder}"
 
 
 class Watchlist(models.Model):

@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required 
-from .models import User
+from .models import * 
 from django import forms
 
 class CreateBid(forms.Form):
@@ -16,7 +16,11 @@ class CreateBid(forms.Form):
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    bid_total= Listing.objects.count()
+    return render(request, "auctions/index.html", {
+        'bid':bid_total
+        }
+        )
 
 
 def login_view(request):
