@@ -121,3 +121,9 @@ def add_listing(request):
 
 def error(request):
     return render(request, "auctions/error.html")
+def test(request, Listing_id):
+    l = Listing.objects.get(pk=Listing_id)
+    return render(request,"auctions/testing.html", {
+        "l":l,
+        "k":l.tag.all()
+        } )

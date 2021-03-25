@@ -7,6 +7,7 @@ app_name="auctions"
 urlpatterns = [
     path("", views.index, name="index"),
     path("login", views.login_view, name="login"),
+    path("test", views.test, name="test"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),
     path("error", views.error, name="error"),

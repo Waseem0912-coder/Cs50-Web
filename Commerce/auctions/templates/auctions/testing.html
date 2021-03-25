@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+
+{% for m  in k  %}
+
+<li>{{ m }}</li>
+{{% empty %}}
+<li>No Tags</li>
+{% endfor %}
+
+
+{% endblock %}
+

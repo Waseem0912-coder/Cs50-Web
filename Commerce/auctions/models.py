@@ -22,12 +22,12 @@ class Listing(models.Model):
     bid_owner= models.CharField(max_length=64)
     bid_title= models.CharField(max_length=64)
     bid_description= models.CharField(max_length=200)
-    bid_image=models.CharField(max_length=200)
+    bid_image=models.CharField(max_length=200, blank=True)
     bid_starting_price = models.IntegerField()
     #bid_current_price = 2#join
-    current_bidder = models.ForeignKey(Bidder, on_delete=models.CASCADE)
-    bid_categories = models.ManyToManyField(Category)
-    bid_comments = models.ManyToManyField(Comments)
+    current_bidder = models.ForeignKey(Bidder, on_delete=models.CASCADE, related_name="bidder")
+    bid_categories = models.ManyToManyField(Category, related_name="tag")
+    bid_comments = models.ManyToManyField(Comments, blank=True, related_name="comments")
     bid_status = False
     def __str__(self):
         return f"{self.id}: Owner: {self.bid_owner} Titlekj {self.current_bidder}"
