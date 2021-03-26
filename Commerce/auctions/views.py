@@ -13,6 +13,9 @@ class CreateBid(forms.Form):
     bid_image= forms.CharField(label="Enter the link to an image", widget=forms.TextInput(attrs={'class' : 'form-control col-md-4 col-lg-4'}))
     bid_starting_price=forms.IntegerField(label="Enter the starting price for the bid")
 
+class Comment(forms.Form):
+    title = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class': 'form-control col-md-4 col-lg-4'}))
+    comment = forms.CharField(label="Comment", widget=forms.Textarea(attrs={'class' :'form-control'}))
 
 
 def index(request):
@@ -76,8 +79,6 @@ def register(request):
 
 
 
-def tester(requestd="POST"):
-    username= request.POST
 
 
 #if logged in show the dashboard with active listings
@@ -121,9 +122,33 @@ def add_listing(request):
 
 def error(request):
     return render(request, "auctions/error.html")
-def test(request, Listing_id):
-    l = Listing.objects.get(pk=Listing_id)
+def test(request, listing_id):
+    l = Listing.objects.get(pk=listing_id)
+    k= l.bid_comments.all()
+    r= l.bid_categories.all()
+    m = l.current_bidder
+    if(request.method=="POST"):
+        create = Comment(request.POST)
+        if create.is_valid():
+            k.comments_title= create.cleaned_data["title"]
+            k.comments_description=create.cleaned_data["commet"]
+            k.user= request.user.username
+            k.save()
+
     return render(request,"auctions/testing.html", {
-        "l":l,
-        "k":l.tag.all()
+        "l":l, "k":k, "r":r,"m":m
         } )
+
+
+
+
+
+
+
+
+
+
+
+
+
+

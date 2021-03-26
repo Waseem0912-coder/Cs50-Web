@@ -1,0 +1,58 @@
+{% extends "auctions/layout.html" %} {% block body %}
+<h2>{{bid.bid_title}}</h2>
+<br>
+The Owner of the bid is {{bid.bid_owner}}
+<br>
+
+{{bid.bid_description}}
+<br>
+<img src="{{bid.bid_image}}" alt="shit went wrong"/>
+<br>
+{% if bid.bid_status %}
+The current bidder is {{bid.current_bidder.user}}
+
+<br>
+<br>	
+{% endif %}
+The current price is {{bid.current_bidder.price}}
+<br>
+
+	<h2>Comments...</h2>
+
+<ul>
+	{% for y in comments %}
+	<li>
+		{{ y.user }}
+
+	<h2>Title:</h2>{{ y.title }}
+	<br></br>
+	{{ y.comment }}
+	<sub>{{y.time}}</sub>
+
+
+	</li>
+	 {% endfor %}
+</ul>
+
+<p>
+Types of tags are:
+{% for x in cat %}
+	<li>
+		{{x.category}}
+	</li>	
+{% endfor %}
+</p>
+
+<br>
+</br>	
+<br></br>
+<form action="{% url 'test' list_id %}" method="post">
+	{%csrf_token%}
+	{{ fm.title }}	
+	{{fm.comment}}
+	<input type="submit">
+
+</form>
+
+{% endblock %}
+
