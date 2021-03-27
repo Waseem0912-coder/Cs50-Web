@@ -13,7 +13,8 @@ class CreateBid(forms.Form):
     bid_image= forms.CharField(label="Enter the link to an image", widget=forms.TextInput(attrs={'class' : 'form-control col-md-4 col-lg-4'}))
     bid_starting_price=forms.IntegerField(label="Enter the starting price for the bid")
 
-class Comment_form(forms.Form):
+
+class Comform(forms.Form):
     title_of_form = forms.CharField(label="Title", widget=forms.TextInput(attrs={'class': 'form-control col-md-4 col-lg-4'}))
     comment_of_form = forms.CharField(label="Comment", widget=forms.Textarea(attrs={'class' :'form-control'}))
 
@@ -40,7 +41,7 @@ def login_view(request):
         else:
             return render(request, "auctions/login.html", {
                 "message": "Invalid username and/or password."
-            })
+                })
     else:
         return render(request, "auctions/login.html")
 
@@ -61,7 +62,7 @@ def register(request):
         if password != confirmation:
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
-            })
+                })
 
         # Attempt to create new user
         try:
@@ -70,7 +71,7 @@ def register(request):
         except IntegrityError:
             return render(request, "auctions/register.html", {
                 "message": "Username already taken."
-            })
+                })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -80,21 +81,22 @@ def test(request, list_id):
    bid= Listing.objects.get(pk=list_id)
    comments= Comment.objects.filter(bid=list_id)
    cat = Category.objects.filter(bid=list_id)
+   usr = request.user
    status = bid.bid_status
-   fm = Comment_form(request.POST or None)
-   if(request.method=="POST"):
-       com= Comment.objects.get(bid=list_id)
-       com.user= request.user.username
-       com.title= request.POST["title_of_form"]
-       com.comment= request.POST["comment_of_form"]
-       com.save()
-   return render(request, "auctions/test.html", {"fm":fm, "status":status, "bid":bid, "comments":comments, "cat":cat })
-   
+   return render(request, "auctions/test.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform() })
 
 
-
-
-
-
+def com_make(request, list_id):
+   bid= Listing.objects.get(pk=list_id)
+   cat = Category.objects.filter(bid=list_id)
+   usr = request.user
+   status = bid.bid_status
+   if request.method=="POST":
+       form = Comform(request.POST)
+       if form.is_valid():
+           obj = Comment()
+           obj = Comment(user=usr, bid=bid,title=form.cleaned_data["title_of_form"],comment=form.cleaned_data["comment_of_form"])
+           obj.save()
+           return HttpResponseRedirect(reverse("test", args=(bid.id,)))
 
 

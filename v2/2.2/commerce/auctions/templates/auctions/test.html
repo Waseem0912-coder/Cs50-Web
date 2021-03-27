@@ -46,11 +46,12 @@ Types of tags are:
 <br>
 </br>	
 <br></br>
-<form action="{% url 'test' list_id %}" method="post">
+<form action="{%url 'com_make' bid.id%}" method="post">
 	{%csrf_token%}
-	{{ fm.title }}	
-	{{fm.comment}}
-	<input type="submit">
+	{{form}}
+	<br></br>
+       <input class="save btn btn-info" type="submit" value="Save"/>
+
 
 </form>
 
