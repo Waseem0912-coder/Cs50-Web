@@ -6,15 +6,6 @@ class User(AbstractUser):
     pass
  
 
-class Bid(models.Model):
-    time = models.DateTimeField(auto_now_add=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.user} put a bid in for {self.price}"
-
-
 class Listing(models.Model):
     bid_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owners")
     bid_title= models.CharField(max_length=64)
@@ -22,10 +13,19 @@ class Listing(models.Model):
     bid_image=models.CharField(max_length=200, blank=True)
     bid_starting_price = models.IntegerField()
     bid_time= models.DateTimeField(auto_now_add=True, blank=True)
-    current_bidder = models.ForeignKey(Bid,blank=True, on_delete=models.CASCADE, related_name="bidder_now")
-    bid_status = models.BooleanField(default=0)
+    bid_status = models.BooleanField(default=1)
     def __str__(self):
-        return f"{self.bid_title}: is {self.current_bidder.price} and is being sold by {self.bid_owner}"
+        return f"{self.bid_title}: is being sold by {self.bid_owner}"
+
+class Bid(models.Model):
+    bid_id=models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="current_bidder_id")
+    time = models.DateTimeField(auto_now_add=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_bids")
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.user} put a bid in for {self.price}"
+
 
 class Category(models.Model):
     bid=models.ManyToManyField(Listing, related_name="tags", blank=True)

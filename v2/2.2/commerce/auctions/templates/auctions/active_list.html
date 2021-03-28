@@ -1,0 +1,13 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% if obj %}
+    {% for y in obj %}
+    <p><a href="{%url 'views_list' y.id%}">{{y}}</a></p>
+    {% endfor %}
+    {% else %}
+    No active list
+    {% endif %}
+{% endblock %}
+

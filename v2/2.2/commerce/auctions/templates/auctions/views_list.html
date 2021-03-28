@@ -9,7 +9,8 @@ The Owner of the bid is {{bid.bid_owner}}
 <img src="{{bid.bid_image}}" alt="shit went wrong"/>
 <br>
 {% if bid.bid_status %}
-The current bidder is {{bid.current_bidder.user}}
+	
+The current bidder is {{current_bidder.user}}
 
 <br>
 <br>	
@@ -50,7 +51,7 @@ Types of tags are:
 	{%csrf_token%}
 	{{form}}
 	<br></br>
-       <input class="save btn btn-info" type="submit" value="Save"/>
+       <input class="save btn btn-info" type="submit" value="Add Comment"/>
 
 
 </form>

@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<form action="{% url 'create' %}" method="post" accept-charset="utf-8">
+	{%csrf_token%}
+
+ {% if error %}
+        <p style="color:red">{{ error }}</p>
+    {% endif %}
+	{{form}}
+	<br></br>
+       <input class="save btn btn-info" type="submit" value="Save"/>
+	
+</form>
+{% endblock %}
+
+
