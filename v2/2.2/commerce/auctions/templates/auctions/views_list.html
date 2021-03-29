@@ -1,60 +1,62 @@
 {% extends "auctions/layout.html" %} {% block body %}
-<h2>{{bid.bid_title}}</h2>
-<br>
-The Owner of the bid is {{bid.bid_owner}}
-<br>
-
-{{bid.bid_description}}
+<h2>Listing:{{bid.bid_title}}</h2>
+<sub><strong>{% if watch %}Watchlist{%endif%}</strong></sub>
 <br>
 <img src="{{bid.bid_image}}" alt="shit went wrong"/>
 <br>
+{% if l %}
+<form action="{%url 'bid_stat' bid.id%}" method="post" accept-charset="utf-8">
+	{%csrf_token%}
+	<input type="submit" value="Stop Bid" />	
+</form>
+{%else%}
 {% if bid.bid_status %}
-	
-The current bidder is {{current_bidder.user}}
-
+<h2><strong>${{j}}</strong> </h2>
 <br>
-<br>	
+<sub>The current bidder is {{current_bidder.user}}</sub>
+{%if error%}{{error}}{%endif%}
+<form action="{%url 'make_bid' bid.id%}" method="post">
+	{%csrf_token%}
+	{{bidForm}}
+	<br></br>
+	<input class="save btn btn-info" type="submit" value="Place Bid"/>
+</form>
+{%else%}
+This Bid is closed
 {% endif %}
-The current price is {{bid.current_bidder.price}}
-<br>
+{%endif%}
+<p>
+<h2><strong>Details:</strong></h2>
+<br></br>
+<ol>
+	<li>Listed by {{bid.bid_owner}}</li>
+	<li>Category:{% for x in cat %}{{x.category}}{% endfor %}
+	</li>
+</ol>
+</p>
+{%if c_valid%}
 
-	<h2>Comments...</h2>
+<h2>Comments...</h2>
 
 <ul>
 	{% for y in comments %}
-	<li>
-		{{ y.user }}
-
-	<h2>Title:</h2>{{ y.title }}
-	<br></br>
-	{{ y.comment }}
-	<sub>{{y.time}}</sub>
-
-
-	</li>
+	<h2 style="color: blue;">{{y.title}} <br> <h4>{{y.comment}}</h4></h2>
+	<sub>By @{{y.user}} posted at:{{y.time}}</sub>
 	 {% endfor %}
 </ul>
 
-<p>
-Types of tags are:
-{% for x in cat %}
-	<li>
-		{{x.category}}
-	</li>	
-{% endfor %}
-</p>
+{%else%}
+	<p>No Comments Yet</p>
+	<p>Add a Comment</p>
+	{%endif%}
+	<h2>Add a Comment</h2>
 
-<br>
-</br>	
-<br></br>
-<form action="{%url 'com_make' bid.id%}" method="post">
-	{%csrf_token%}
-	{{form}}
-	<br></br>
-       <input class="save btn btn-info" type="submit" value="Add Comment"/>
+	<form action="{%url 'com_make' bid.id%}" method="post">
+		{%csrf_token%}
+		{{form}}
+		<br></br>
+		<input class="save btn btn-info" type="submit" value="Add Comment"/>
+	</form>
 
-
-</form>
-
-{% endblock %}
+	{% endblock %}
 

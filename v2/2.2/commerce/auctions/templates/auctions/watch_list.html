@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Your Watch List:</h2>
+    {% if w %}
+    {% for y in w %}
+    <p><a href="{%url 'views_list' y.id%}">{{y}}: {%if y.bid_status%}Open{%else%}Closed{%endif%}</a></p>
+    {% endfor %}
+    {% else %}
+    No Watch list
+    {% endif %}
+{% endblock %}
+
+

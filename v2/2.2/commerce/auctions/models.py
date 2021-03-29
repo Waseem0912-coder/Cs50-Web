@@ -43,8 +43,8 @@ class Comment(models.Model):
 
 
 class Watchlist(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    listing = models.ManyToManyField(Listing)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,blank=True)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True)
 
 class Winners(models.Model):
     owner= models.CharField(max_length=64)
