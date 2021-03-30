@@ -14,6 +14,7 @@ class Listing(models.Model):
     bid_starting_price = models.IntegerField()
     bid_time= models.DateTimeField(auto_now_add=True, blank=True)
     bid_status = models.BooleanField(default=1)
+    bid_price = models.IntegerField(blank=True)
     def __str__(self):
         return f"{self.bid_title}: is being sold by {self.bid_owner}"
 

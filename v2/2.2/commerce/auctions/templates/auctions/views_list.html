@@ -1,6 +1,12 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <h2>Listing:{{bid.bid_title}}</h2>
-<sub><strong>{% if watch %}Watchlist{%endif%}</strong></sub>
+<sub><strong>{% if watch %}Watchlist{%else%}
+		<form action="{% url 'add_watch' bid.id%}" method="post" accept-charset="utf-8">
+		{% csrf_token %}	
+	<input class="save btn btn-info" type="submit" value="Add to Watchlist"/>
+
+		</form>
+		{%endif%}</strong></sub>
 <br>
 <img src="{{bid.bid_image}}" alt="shit went wrong"/>
 <br>

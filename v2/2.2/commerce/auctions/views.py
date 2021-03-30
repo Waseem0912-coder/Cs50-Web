@@ -116,10 +116,13 @@ def views_list(request, list_id):
            obj_bid= Bid()
            obj_bid=Bid(bid_id=bid,user=request.user, price=mkbid.cleaned_data["bidded"])
            obj_bid.save()
-           j= obj_bid.price
+           if obj_bid.price >j:
+               j= obj_bid.price
    owns=False
    if bid.bid_owner==request.user:
         owns=True
+   bid.bid_price=j
+   bid.save()
    return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid,"owns":owns })
 
 
@@ -146,7 +149,14 @@ def bid_control(request, list_id):
         bid.save()
         return HttpResponseRedirect(reverse("views_list", args=(bid.id,)))
 
-          
+def add_watch(request, list_id):
+    if request.method=="POST":
+        w = Watchlist()
+        l = Listing.objects.get(pk=list_id)
+        w = Watchlist(user=request.user, listing=l)
+        w.save()
+        return HttpResponseRedirect(reverse("views_list", args=(l.id,)))
+
 
 
 
@@ -187,10 +197,12 @@ def create(request):
         })
 
 @login_required(login_url='/login')
-def watch_list(request, usr):
-    w= Watchlist.objects.filter(user=usr)
-    if len(w) <= 0: 
-        w=False
+def watch_list(request):
+    usr = request.user
+    f= Watchlist.objects.filter(user=usr)
+    w= False
+    if len(f) > 0: 
+        w=f
     return render(request, "auctions/watch_list.html", {
         "w":w
         })
@@ -213,16 +225,22 @@ def active_list(request):
 @login_required(login_url='/login')
 def cat(request):
     c = Category.objects.all()
+    x=0
+    if len(c)>0:
+        x=1
     return render(request, "auctions/cat.html", {
-        "c":c
+        "c":c, "x":x
         })
 @login_required(login_url='/login')
-def cat_view(request,cat):
-    c= Listing.objects.filter(category=cat, bid_status=True)
-    if len(c) <=0:
-        c=False
+def cat_view(request, cat_id):
+    c= Category.objects.get(pk=cat_id)
+    c=c.category
+    cat= Category.objects.get(pk=cat_id)
+    obj = cat.bid.all()
+    if len(obj) <=0:
+        obj=False
     return render(request, "auctions/cat_view.html", {
-        "c":c,"cat":cat
+        "obj":obj,"c":c 
         })
 
 
