@@ -4,26 +4,25 @@
 <br>
 <img src="{{bid.bid_image}}" alt="shit went wrong"/>
 <br>
-{% if l %}
-<form action="{%url 'bid_stat' bid.id%}" method="post" accept-charset="utf-8">
+{%if bid.bid_status%}
+{% if owns %}
+<form action="{%url 'bid_control' bid.id%}" method="post" accept-charset="utf-8">
 	{%csrf_token%}
 	<input type="submit" value="Stop Bid" />	
 </form>
 {%else%}
-{% if bid.bid_status %}
-<h2><strong>${{j}}</strong> </h2>
 <br>
-<sub>The current bidder is {{current_bidder.user}}</sub>
-{%if error%}{{error}}{%endif%}
-<form action="{%url 'make_bid' bid.id%}" method="post">
+<h2><strong>${{j}}</strong> </h2>
+<form action="{%url 'views_list' bid.id%}" method="post">
 	{%csrf_token%}
 	{{bidForm}}
 	<br></br>
 	<input class="save btn btn-info" type="submit" value="Place Bid"/>
 </form>
-{%else%}
-This Bid is closed
-{% endif %}
+{%endif%}
+{% else %}
+<h2><strong>${{j}}</strong> </h2>
+<h2><strong>BID CLOSED!!</strong></h2>
 {%endif%}
 <p>
 <h2><strong>Details:</strong></h2>

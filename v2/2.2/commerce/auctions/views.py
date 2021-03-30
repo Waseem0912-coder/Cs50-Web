@@ -96,18 +96,32 @@ def views_list(request, list_id):
        watch= True
    j = Bid.objects.filter(bid_id=bid).exists()
    if j:
-       j= Bid.objects.all().aggregate(Max('price'))
+       j= Bid.objects.filter(bid_id=bid)
+       l= j.order_by('-price')
+       l= l.first()
+       j= l.price
    else:
        j=bid.bid_starting_price
    bidForm=0
    if usr!= bid.bid_owner:
-       bidForm = BidForm()
+       bidForm = BidForm(request.POST)
    else:
        bidForm= bidstatForm()
    c_valid = False
    if len(comments)>0:
        c_valid=True
-   return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid })
+   if request.method=="POST":
+       mkbid = BidForm(request.POST)
+       if mkbid.is_valid():
+           obj_bid= Bid()
+           obj_bid=Bid(bid_id=bid,user=request.user, price=mkbid.cleaned_data["bidded"])
+           obj_bid.save()
+           j= obj_bid.price
+   owns=False
+   if bid.bid_owner==request.user:
+        owns=True
+   return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid,"owns":owns })
+
 
 def make_bid(request, list_id):
     bid = Listing.objects.get(pk=list_id)
@@ -115,24 +129,24 @@ def make_bid(request, list_id):
     if request.user == bid.bid_owner:
         l=True
     if request.method=="POST":
-        form= BidForm()
+        form= BidForm(request.POST)
         if form.is_valid():
             k= Bid.objects.get(bid_id=bid)
             f =form.cleaned_data["bidded"]
             if f>k:
                 k= Bid(user=usr,price=f)
                 k.save()
-                return HttpResponseRedirect(reverse("views_list", args=(list_id)))
-    return HttpResponseRedirect(reverse("views_list", args=(list_id)))
+                return HttpResponseRedirect(reverse("views_list", args=(bid.id)))
 
 
 def bid_control(request, list_id):
     bid = Listing.objects.get(pk=list_id)
     if request.method=="POST":
-        form = bidstatForm()
+        bid.bid_status=0
+        bid.save()
+        return HttpResponseRedirect(reverse("views_list", args=(bid.id,)))
 
-
-        
+          
 
 
 
