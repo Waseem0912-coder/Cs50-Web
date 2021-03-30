@@ -4,7 +4,7 @@
     <h2>Your Watch List:</h2>
     {% if w %}
     {% for y in w %}
-    <p><a href="{%url 'views_list' y.id%}">{{y.listing.bid_title}}: {%if y.listing.bid_starting_price%}Open current price ${{y.listing.bid_price}}{%else%}Closed{%endif%}</a></p>
+    <p><a href="{%url 'views_list' y.listing.id%}">{{y.listing.bid_title}}: {%if y.listing.bid_status%}Open current price ${{y.listing.bid_price}}{%else%}Closed at {{y.listing.bid_price}}{%endif%}</a></p>
     {% endfor %}
     {% else %}
     No Watch list

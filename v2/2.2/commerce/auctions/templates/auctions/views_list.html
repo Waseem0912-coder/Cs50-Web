@@ -1,8 +1,10 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <h2>Listing:{{bid.bid_title}}</h2>
+{% if uu %}
 {% if Winner %}
 <strong>{{Winner}}</strong>
 {% endif %}
+{%endif%}
 <br>
 
 <sub><strong>{% if watch %}Watchlist{%else%}

@@ -90,6 +90,7 @@ def views_list(request, list_id):
    comments= Comment.objects.filter(bid=list_id)
    cat = Category.objects.filter(bid=list_id)
    usr = request.user
+   uu= False
    status = bid.bid_status
    watch= False
    if Watchlist.objects.filter(user=usr, listing=bid).exists():
@@ -126,7 +127,11 @@ def views_list(request, list_id):
         Winner="You have Won!"
    bid.bid_price=j
    bid.save()
-   return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid,"owns":owns,"Winner":Winner })
+   if  Winners.objects.filter(listing=bid).exists():
+       a = Winners.objects.get(listing=bid)
+       if a.user==request.user:
+            uu=True
+   return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid,"owns":owns,"Winner":Winner, "uu":uu })
 
 
 def make_bid(request, list_id):
@@ -158,13 +163,14 @@ def bid_control(request, list_id):
         w = Winners()        
         w= Winners(user=k, listing=bid,win_price=l)
         w.save()
-        return HttpResponseRedirect(reverse("views_list", args=(bid.id,)))
+        return HttpResponseRedirect(reverse("views_list", args=(list_id,)))
 
 def add_watch(request, list_id):
     if request.method=="POST":
         w = Watchlist()
         l = Listing.objects.get(pk=list_id)
         w = Watchlist(user=request.user, listing=l)
+        k = l.id
         w.save()
         return HttpResponseRedirect(reverse("views_list", args=(l.id,)))
 
