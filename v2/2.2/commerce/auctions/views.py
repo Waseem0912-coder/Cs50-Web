@@ -119,11 +119,14 @@ def views_list(request, list_id):
            if obj_bid.price >j:
                j= obj_bid.price
    owns=False
+   Winner=0
    if bid.bid_owner==request.user:
         owns=True
+   if bid.bid_status==False:
+        Winner="You have Won!"
    bid.bid_price=j
    bid.save()
-   return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid,"owns":owns })
+   return render(request, "auctions/views_list.html", {"status":status, "bid":bid, "comments":comments, "cat":cat,"form":Comform(), "j":j,"bidForm":bidForm, "watch":watch,"usr":usr, "c_valid":c_valid,"owns":owns,"Winner":Winner })
 
 
 def make_bid(request, list_id):
@@ -146,7 +149,15 @@ def bid_control(request, list_id):
     bid = Listing.objects.get(pk=list_id)
     if request.method=="POST":
         bid.bid_status=0
+        l= bid.bid_price
         bid.save()
+        k = Bid.objects.filter(bid_id=list_id) 
+        k= k.order_by("-price")
+        k= k.first()
+        k= k.user
+        w = Winners()        
+        w= Winners(user=k, listing=bid,win_price=l)
+        w.save()
         return HttpResponseRedirect(reverse("views_list", args=(bid.id,)))
 
 def add_watch(request, list_id):
@@ -185,6 +196,7 @@ def create(request):
                 obj.bid_image = form.cleaned_data["bid_image"]
             else:
                 obj.bid_image = "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+            obj.bid_price=form.cleaned_data["bid_starting_price"]
             obj.save()
             cat = Category()
             cat=Category(category=form.cleaned_data["bid_category"])
@@ -228,8 +240,9 @@ def cat(request):
     x=0
     if len(c)>0:
         x=1
+    j = len(c)
     return render(request, "auctions/cat.html", {
-        "c":c, "x":x
+        "c":c, "x":x, "j":j
         })
 @login_required(login_url='/login')
 def cat_view(request, cat_id):

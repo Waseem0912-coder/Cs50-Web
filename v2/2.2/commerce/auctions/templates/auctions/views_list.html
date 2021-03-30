@@ -1,5 +1,10 @@
 {% extends "auctions/layout.html" %} {% block body %}
 <h2>Listing:{{bid.bid_title}}</h2>
+{% if Winner %}
+<strong>{{Winner}}</strong>
+{% endif %}
+<br>
+
 <sub><strong>{% if watch %}Watchlist{%else%}
 		<form action="{% url 'add_watch' bid.id%}" method="post" accept-charset="utf-8">
 		{% csrf_token %}	
@@ -13,6 +18,8 @@
 {%if bid.bid_status%}
 {% if owns %}
 <form action="{%url 'bid_control' bid.id%}" method="post" accept-charset="utf-8">
+ <h2><strong>Current Bid is ${{j}}</strong> </h2>
+
 	{%csrf_token%}
 	<input type="submit" value="Stop Bid" />	
 </form>
@@ -31,8 +38,10 @@
 <h2><strong>BID CLOSED!!</strong></h2>
 {%endif%}
 <p>
-<h2><strong>Details:</strong></h2>
-<br></br>
+<h2><strong>About:</strong></h2>
+{{bid.bid_description}}
+<br>
+<h5><strong>Details</strong></h5>
 <ol>
 	<li>Listed by {{bid.bid_owner}}</li>
 	<li>Category:{% for x in cat %}{{x.category}}{% endfor %}
@@ -51,8 +60,7 @@
 </ul>
 
 {%else%}
-	<p>No Comments Yet</p>
-	<p>Add a Comment</p>
+<p><h2>No Comments Yet....</h2></p>
 	{%endif%}
 	<h2>Add a Comment</h2>
 

@@ -5,7 +5,7 @@
     <br></br>
     {% if x %}
     <ol>
-	    {%for y in c%}
+	    {%for y in c.id%}
 	    <a href="{% url 'cat_view' y.id%}">
 	    <li>{{y.category}}</li>
 	    <br>

@@ -48,11 +48,9 @@ class Watchlist(models.Model):
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True)
 
 class Winners(models.Model):
-    owner= models.CharField(max_length=64)
-    winner= models.CharField(max_length=64)
-    listingid= models.IntegerField()
+    user= models.OneToOneField(User, on_delete=models.CASCADE)
     win_price= models.IntegerField()
-    title= models.CharField(max_length=64, null=True)
+    listing = models.OneToOneField(Listing,on_delete=models.CASCADE)
 
 
 

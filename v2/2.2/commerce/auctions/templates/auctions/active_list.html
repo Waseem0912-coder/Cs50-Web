@@ -3,8 +3,21 @@
 {% block body %}
     <h2>Active Listings</h2>
     {% if obj %}
-    {% for y in obj %}
-    <p><a href="{%url 'views_list' y.id%}">{{y}}</a></p>
+    {% for bid in obj %}
+    <p><a href="{%url 'views_list' bid.id%}">{{bid.bid_title}}</a></p>
+    <img src="{{bid.bid_image}}" alt="shit went wrong"/>
+    <h2><strong>About:</strong></h2>
+{{bid.bid_description}}
+<br>
+<h5><strong>Details</strong></h5>
+<ol>
+	<li>Listed by {{bid.bid_owner}}</li>
+	<li>Current Price: ${%if bid.bid_price%}{{bid.bid_price}}{%else%}{{bid.bid_starting_price}}{%endif%}</li>
+</ol>
+</p>
+
+
+
     {% endfor %}
     {% else %}
     No active list
